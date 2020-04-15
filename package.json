@@ -1,13 +1,36 @@
 {
-  "name": "youngstart-node-server",
-  "version": "1.0.0",
-  "main": "index.js",
-  "license": "MIT",
-  "dependencies": {
-    "axios": "^0.19.2",
-    "express": "^4.17.1",
-    "morgan": "^1.10.0",
-    "mysql": "^2.18.1",
-    "sequelize": "^5.21.6"
-  }
+    "name": "youngstart-node-server",
+    "version": "1.0.0",
+    "main": "index.js",
+    "license": "MIT",
+    "scripts": {
+        "start": "node src",
+        "start:dev": "nodemon --exec babel-node --watch src/ src/app.js",
+        "lint": "yarn eslint ."
+    },
+    "dependencies": {
+        "axios": "^0.19.2",
+        "body-parser": "^1.19.0",
+        "celebrate": "^9.1.0",
+        "cors": "^2.8.5",
+        "dotenv": "^8.2.0",
+        "express": "^4.17.1",
+        "express-jwt": "^5.3.3",
+        "morgan": "^1.10.0",
+        "mysql": "^2.18.1",
+        "sequelize": "^5.21.6",
+        "typedi": "^0.8.0",
+        "winston": "^3.2.1"
+    },
+    "devDependencies": {
+        "@babel/cli": "^7.8.4",
+        "@babel/core": "^7.9.0",
+        "@babel/node": "^7.8.7",
+        "@babel/preset-env": "^7.9.5",
+        "eslint": "^6.8.0",
+        "eslint-config-airbnb-base": "^14.1.0",
+        "eslint-config-prettier": "^6.10.1",
+        "eslint-plugin-import": "^2.20.2",
+        "v": "^0.3.0"
+    }
 }
