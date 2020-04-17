@@ -1,6 +1,6 @@
 import expressLoader from './express';
 import Logger from './logger';
-import db from './db';
+import db from '../models';
 
 export default async ({ expressApp }) => {
     // const mongoConnection = await mongooseLoader();
@@ -34,9 +34,9 @@ export default async ({ expressApp }) => {
     // await jobsLoader({ agenda });
     // Logger.info('✌️ Jobs loaded');
 
-    await db.connect();
-    Logger.info('db loaded');
-
     await expressLoader({ app: expressApp });
     Logger.info('express loaded');
+
+    await db.sequelize.sync();
+    Logger.info('sequelize sync end');
 };

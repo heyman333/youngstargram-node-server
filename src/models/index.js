@@ -1,12 +1,10 @@
 import fs from 'fs';
 import path from 'path';
 import Sequelize from 'sequelize';
+import config from '../config/config.sequelize';
+import User from './user';
 
 const basename = path.basename(__filename);
-const env = process.env.NODE_ENV || 'development';
-
-// eslint-disable-next-line import/no-dynamic-require
-const config = require(`${__dirname}/../config/config.sequelize.json`)[env];
 const db = {};
 
 let sequelize;
@@ -43,4 +41,6 @@ Object.keys(db).forEach((modelName) => {
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
-module.exports = db;
+db.User = User(sequelize, Sequelize);
+
+export default db;

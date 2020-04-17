@@ -1,8 +1,11 @@
 import { Router } from 'express';
 import { Container } from 'typedi';
 import { celebrate, Joi } from 'celebrate';
+
 import AuthService from '../../services/auth';
 import middlewares from '../middlewares';
+import LoggerInstance from '../../loaders/logger';
+import db from '../../models';
 
 const route = Router();
 
@@ -13,22 +16,23 @@ export default (app) => {
         '/signup',
         celebrate({
             body: Joi.object({
-                name: Joi.string().required(),
                 email: Joi.string().required(),
-                password: Joi.string().required(),
+                nickname: Joi.string(),
+                profileurl: Joi.string(),
             }),
         }),
         async (req, res, next) => {
-            const logger = Container.get('logger');
-            logger.debug('Calling Sign-Up endpoint with body: %o', req.body);
+            LoggerInstance.debug(
+                'Calling Sign-Up endpoint with body: %o',
+                req.body
+            );
             try {
-                const authServiceInstance = Container.get(AuthService);
-                const { user, token } = await authServiceInstance.SignUp(
-                    req.body
-                );
-                return res.status(201).json({ user, token });
+                const userInstance = new AuthService(db.User, LoggerInstance);
+                await userInstance.SignUp(req.body);
+
+                return res.status(201).json({ message: 'user created!' });
             } catch (e) {
-                logger.error('🔥 error: %o', e);
+                LoggerInstance.error('🔥 error: %o', e);
                 return next(e);
             }
         }
