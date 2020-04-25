@@ -4,9 +4,10 @@ export default class AuthService {
         this.logger = logger;
     }
 
-    async SignUp(userInputDTO) {
+    async SignUp(userInput) {
         try {
-            await this.userModel.create(userInputDTO);
+            // 비지니스 로직이 들어감
+            await this.userModel.create(userInput);
         } catch (e) {
             console.log(e);
         }

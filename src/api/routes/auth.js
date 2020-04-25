@@ -27,8 +27,8 @@ export default (app) => {
                 req.body
             );
             try {
-                const userInstance = new AuthService(db.User, LoggerInstance);
-                await userInstance.SignUp(req.body);
+                const authInstance = new AuthService(db.User, LoggerInstance);
+                await authInstance.SignUp(req.body);
 
                 return res.status(201).json({ message: 'user created!' });
             } catch (e) {
