@@ -1,3 +1,4 @@
+import { Container } from 'typedi';
 import winston from 'winston';
 import config from '../config';
 
@@ -28,5 +29,7 @@ const LoggerInstance = winston.createLogger({
     ),
     transports,
 });
+
+Container.set('logger', LoggerInstance);
 
 export default LoggerInstance;

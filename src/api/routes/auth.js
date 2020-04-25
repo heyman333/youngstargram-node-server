@@ -5,12 +5,13 @@ import { celebrate, Joi } from 'celebrate';
 import AuthService from '../../services/auth';
 import middlewares from '../middlewares';
 import LoggerInstance from '../../loaders/logger';
-import db from '../../models';
 
 const route = Router();
 
 export default (app) => {
     app.use('/auth', route);
+    const authInstance = Container.get('AuthService');
+    const logger = Container.get('logger');
 
     route.post(
         '/signup',
@@ -22,12 +23,9 @@ export default (app) => {
             }),
         }),
         async (req, res, next) => {
-            LoggerInstance.debug(
-                'Calling Sign-Up endpoint with body: %o',
-                req.body
-            );
+            logger.debug('Calling Sign-Up endpoint with body: ', req.body);
+
             try {
-                const authInstance = new AuthService(db.User, LoggerInstance);
                 await authInstance.SignUp(req.body);
 
                 return res.status(201).json({ message: 'user created!' });
@@ -47,7 +45,6 @@ export default (app) => {
             }),
         }),
         async (req, res, next) => {
-            const logger = Container.get('logger');
             logger.debug('Calling Sign-In endpoint with body: %o', req.body);
             try {
                 const { email, password } = req.body;
@@ -74,7 +71,6 @@ export default (app) => {
      * It's really annoying to develop that but if you had to, please use Redis as your data store
      */
     route.post('/logout', middlewares.isAuth, (req, res, next) => {
-        const logger = Container.get('logger');
         logger.debug('Calling Sign-Out endpoint with body: %o', req.body);
         try {
             // @TODO AuthService.Logout(req.user) do some clever stuff
@@ -84,4 +80,23 @@ export default (app) => {
             return next(e);
         }
     });
+
+    route.post(
+        '/delete',
+        celebrate({
+            body: Joi.object({
+                id: Joi.number().required(),
+            }),
+        }),
+        (req, res, next) => {
+            logger.debug('Calling delete endpoint with body: ', req.body);
+            authInstance.Withdraw(req.body.id);
+            try {
+                return res.status(200).end();
+            } catch (e) {
+                logger.error('🔥 error %o', e);
+                return next(e);
+            }
+        }
+    );
 };

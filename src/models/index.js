@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import Sequelize from 'sequelize';
+import { Container, Service } from 'typedi';
 import config from '../config/config.sequelize';
 import User from './user';
 
@@ -43,4 +44,28 @@ db.Sequelize = Sequelize;
 
 db.User = User(sequelize, Sequelize);
 
-export default db;
+const SequelizeRepository = Service(() => ({
+    getSequelize() {
+        return sequelize;
+    },
+}));
+
+const UserRepository = Service(() => ({
+    getUser() {
+        return db.User;
+    },
+}));
+
+const DBController = Service(
+    [SequelizeRepository, UserRepository],
+    (sequelizeRepo, userRepo) => {
+        return {
+            sequelize: sequelizeRepo.getSequelize(),
+            user: userRepo.getUser(),
+        };
+    }
+);
+
+const dbController = Container.get(DBController);
+
+export default dbController;

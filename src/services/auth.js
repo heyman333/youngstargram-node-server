@@ -15,6 +15,17 @@ export default class AuthService {
             console.log(e);
         }
     }
+
+    async Withdraw(userId) {
+        try {
+            const result = await this.userModel.destroy({
+                where: { id: userId },
+            });
+            console.log('result', result);
+        } catch (e) {
+            console.log(e);
+        }
+    }
 }
 
 Container.set('AuthService', new AuthService(Container));
