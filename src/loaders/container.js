@@ -6,8 +6,14 @@ import AuthService from '../services/auth';
 
 const initContainer = () => {
     Container.set('dbController', dbController);
-    Container.set('AuthService', new AuthService(Container));
     Container.set('logger', Logger);
+
+    Container.set('AuthService', new AuthService(Container));
+
+    return {
+        dbController,
+        Logger,
+    };
 };
 
 export default initContainer;

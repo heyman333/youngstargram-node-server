@@ -1,11 +1,9 @@
 import expressLoader from './express';
-import Logger from './logger';
-import dbController from '../models';
 import initCotainer from './container';
 
 export default async ({ expressApp }) => {
     // const mongoConnection = await mongooseLoader();
-    initCotainer();
+    const { dbController, Logger } = initCotainer();
     Logger.info('✌️ initCotainer!!');
 
     /**
