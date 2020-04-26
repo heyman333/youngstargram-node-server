@@ -1,5 +1,4 @@
 import bodyParser from 'body-parser';
-import { errors } from 'celebrate';
 import cors from 'cors';
 import routes from '../api';
 import config from '../config';
@@ -42,8 +41,6 @@ export default ({ app }) => {
         next(err);
     });
 
-    app.use(errors());
-
     // / error handlers
     app.use((err, req, res, next) => {
         /**
@@ -52,8 +49,14 @@ export default ({ app }) => {
         if (err.name === 'UnauthorizedError') {
             return res.status(err.status).send({ message: err.message }).end();
         }
+
+        if (err.name === 'ValidationError') {
+            return res.status(400).send({ message: err.message }).end();
+        }
+
         return next(err);
     });
+
     app.use((err, req, res) => {
         res.status(err.status || 500);
         res.json({
