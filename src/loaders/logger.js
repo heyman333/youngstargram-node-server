@@ -30,6 +30,4 @@ const LoggerInstance = winston.createLogger({
     transports,
 });
 
-Container.set('logger', LoggerInstance);
-
 export default LoggerInstance;

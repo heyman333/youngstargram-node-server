@@ -1,10 +1,12 @@
 import expressLoader from './express';
 import Logger from './logger';
 import dbController from '../models';
+import initCotainer from './container';
 
 export default async ({ expressApp }) => {
     // const mongoConnection = await mongooseLoader();
-    // Logger.info('✌️ DB loaded and connected!');
+    initCotainer();
+    Logger.info('✌️ initCotainer!!');
 
     /**
      * WTF is going on here?

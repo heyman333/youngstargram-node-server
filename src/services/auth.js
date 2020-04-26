@@ -1,10 +1,6 @@
-import { Container } from 'typedi';
-import dbController from '../models';
-
 export default class AuthService {
     constructor(container) {
-        this.userModel = dbController.user;
-        this.logger = container.get('logger');
+        this.userModel = container.get('dbController').User;
     }
 
     async SignUp(userInput) {
@@ -61,5 +57,3 @@ export default class AuthService {
         }
     }
 }
-
-Container.set('AuthService', new AuthService(Container));
