@@ -1,4 +1,5 @@
 import bodyParser from 'body-parser';
+import { errors } from 'celebrate';
 import cors from 'cors';
 import routes from '../api';
 import config from '../config';
@@ -40,6 +41,8 @@ export default ({ app }) => {
         err.status = 404;
         next(err);
     });
+
+    app.use(errors());
 
     // / error handlers
     app.use((err, req, res, next) => {
