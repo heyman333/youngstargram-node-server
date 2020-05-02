@@ -7,9 +7,18 @@ const User = (sequelize, DataTypes) => {
                 allowNull: false,
                 unique: true,
             },
+            password: {
+                type: DataTypes.STRING(128),
+                allowNull: false,
+                unique: false,
+            },
+            salt: {
+                type: DataTypes.STRING(32),
+                allowNull: false,
+                unique: true,
+            },
             nickname: { type: DataTypes.STRING(10), allowNull: true },
             profileurl: { type: DataTypes.STRING(30), allowNull: true },
-            accesstoken: { type: DataTypes.STRING(50), allowNull: true },
         },
         { timestamps: true }
     );

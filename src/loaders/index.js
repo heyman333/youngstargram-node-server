@@ -1,9 +1,10 @@
 import expressLoader from './express';
 import initCotainer from './container';
+import db from '../models';
 
 export default async ({ expressApp }) => {
     // const mongoConnection = await mongooseLoader();
-    const { dbController, Logger } = initCotainer();
+    const { Logger } = initCotainer();
     Logger.info('✌️ initCotainer!!');
 
     /**
@@ -37,6 +38,6 @@ export default async ({ expressApp }) => {
     await expressLoader({ app: expressApp });
     Logger.info('express loaded');
 
-    await dbController.sequelize.sync();
+    await db.sequelize.sync();
     Logger.info('sequelize sync end');
 };

@@ -1,35 +1,43 @@
-import jwt from 'express-jwt';
+import jwt from 'jsonwebtoken';
 import config from '../../config';
+import Logger from '../../loaders/logger';
 
-/**
- * We are assuming that the JWT will come in a header with the form
- *
- * Authorization: Bearer ${JWT}
- *
- * But it could come in a query parameter with the name that you want like
- * GET https://my-bulletproof-api.com/stats?apiKey=${JWT}
- * Luckily this API follow _common sense_ ergo a _good design_ and don't allow that ugly stuff
- */
-const getTokenFromHeader = (req) => {
-    /**
-     * @TODO Edge and Internet Explorer do some weird things with the headers
-     * So I believe that this should handle more 'edge' cases ;)
-     */
-    if (
-        (req.headers.authorization &&
-            req.headers.authorization.split(' ')[0] === 'Token') ||
-        (req.headers.authorization &&
-            req.headers.authorization.split(' ')[0] === 'Bearer')
-    ) {
-        return req.headers.authorization.split(' ')[1];
+class AuthError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'UnauthorizedError';
+        this.status = 401;
     }
-    return null;
-};
+}
 
-const isAuth = jwt({
-    secret: config.jwtSecret, // The _secret_ to sign the JWTs
-    userProperty: 'token', // Use req.token to store the JWT
-    getToken: getTokenFromHeader, // How to extract the JWT from the request
-});
+const isAuth = (needAuthData) => (req, res, next) => {
+    if (!req.headers.authorization) {
+        next(new AuthError('unauthrized'));
+        return;
+    }
+
+    if (req.headers.authorization.split(' ')[0] === 'Bearer') {
+        const token = req.headers.authorization.split(' ')[1];
+        jwt.verify(token, config.jwtSecret, (err, decoded) => {
+            Logger.info(`token decoded ${JSON.stringify(decoded)}`);
+
+            if (needAuthData && decoded) {
+                next(decoded);
+                return;
+            }
+
+            if (decoded) {
+                next();
+                return;
+            }
+
+            if (err) {
+                next(err);
+            }
+        });
+    } else {
+        next(new AuthError('unauthrized'));
+    }
+};
 
 export default isAuth;

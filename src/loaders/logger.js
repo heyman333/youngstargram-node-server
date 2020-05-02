@@ -1,4 +1,3 @@
-import { Container } from 'typedi';
 import winston from 'winston';
 import config from '../config';
 
