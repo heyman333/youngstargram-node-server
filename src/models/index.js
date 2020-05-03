@@ -3,6 +3,7 @@ import path from 'path';
 import Sequelize from 'sequelize';
 import config from '../config/config.sequelize';
 import User from './user';
+import Article from './article';
 
 const basename = path.basename(__filename);
 const db = {};
@@ -42,5 +43,6 @@ db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
 db.User = User(sequelize, Sequelize);
+db.Article = Article(sequelize, Sequelize);
 
 export default db;
