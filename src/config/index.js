@@ -65,4 +65,8 @@ export default {
     //   apiKey: "API key from mailgun",
     //   domain: "Domain Name from mailgun",
     // },
+    aws: {
+        AccessKeyId: process.env.AWSAccessKeyId,
+        SecretKey: process.env.AWSSecretKey,
+    },
 };
