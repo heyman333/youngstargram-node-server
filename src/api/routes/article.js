@@ -1,9 +1,10 @@
 import { Router } from 'express';
 import { celebrate, Joi } from 'celebrate';
 
-import ArticleService, { upload } from '../../services/article';
+import ArticleService from '../../services/article';
 import middlewares from '../middlewares';
 import LoggerInstance from '../../loaders/logger';
+import upload from '../../upload';
 
 const route = Router();
 
