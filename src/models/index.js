@@ -4,6 +4,7 @@ import Sequelize from 'sequelize';
 import config from '../config/config.sequelize';
 import User from './user';
 import Article from './article';
+import ArticleImage from './articleImage';
 
 const basename = path.basename(__filename);
 const db = {};
@@ -44,5 +45,6 @@ db.Sequelize = Sequelize;
 
 db.User = User(sequelize, Sequelize);
 db.Article = Article(sequelize, Sequelize);
+db.ArticleImage = ArticleImage(sequelize, Sequelize);
 
 export default db;

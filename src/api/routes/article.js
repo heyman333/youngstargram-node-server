@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { celebrate, Joi } from 'celebrate';
 
+import AuthService from '../../services/auth';
 import ArticleService from '../../services/article';
 import middlewares from '../middlewares';
 import LoggerInstance from '../../loaders/logger';
@@ -11,24 +12,27 @@ const route = Router();
 export default (app) => {
     app.use('/article', route);
     const articleInstance = new ArticleService();
+    const authInstance = new AuthService();
 
-    route.get('/', (req, res) => {
-        res.status(200).end();
+    route.get('/:id', middlewares.isAuth(false), async (req, res) => {
+        const article = await articleInstance.Read(req.params.id);
+        return res.json(article);
     });
 
     route.post(
         '/create',
-        middlewares.isAuth(false),
+        middlewares.isAuth(true),
         celebrate({
             body: Joi.object({
-                ccontent: Joi.string(),
+                content: Joi.string(),
             }),
         }),
-        async (req, res, next) => {
+        async (authData, req, res, next) => {
             try {
                 const { content } = req.body;
-                await articleInstance.Create(content);
-                return res.status(200).end();
+                const user = await authInstance.Getme(authData.email);
+                const result = await articleInstance.Create(user, content);
+                return res.json({ id: result.id });
             } catch (e) {
                 LoggerInstance.error('🔥 error: %o', e);
                 return next(e);
@@ -40,9 +44,19 @@ export default (app) => {
         '/image-upload',
         middlewares.isAuth(false),
         upload.array('file', 6),
-        (req, res) => {
+        celebrate({
+            body: Joi.object({
+                articleid: Joi.string().required(),
+                files: Joi.any(),
+            }),
+        }),
+        async (req, res) => {
             if (req.files) {
-                return res.status(200).end();
+                await articleInstance.SaveArticleImages(
+                    req.body.articleid,
+                    req.files
+                );
+                return res.json({ files: req.files });
             }
             return res.status(400).end();
         }

@@ -7,6 +7,11 @@ const Article = (sequelize, DataTypes) => {
                 allowNull: true,
                 unique: false,
             },
+            userid: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                unique: false,
+            },
         },
         { timestamps: true }
     );
