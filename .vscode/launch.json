@@ -7,13 +7,12 @@
         {
             "type": "node",
             "request": "launch",
-            "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/babel-node",
-            "program": "${workspaceFolder}/src/app.js",
             "name": "Launch Program",
-            "skipFiles": ["<node_internals>/**"],
-            "runtimeArgs": ["—nolazy"],
+            "program": "${workspaceFolder}/src/app.js",
+            "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/babel-node",
+            "runtimeArgs": ["--nolazy"],
             "env": {
-                "NODE_ENV": "development"
+                "BABEL_ENV": "debug"
             }
         }
     ]
