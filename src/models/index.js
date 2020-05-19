@@ -47,4 +47,17 @@ db.User = User(sequelize, Sequelize);
 db.Article = Article(sequelize, Sequelize);
 db.ArticleImage = ArticleImage(sequelize, Sequelize);
 
+db.Article.hasMany(db.ArticleImage, {
+    foreignKey: {
+        name: 'articleid',
+        allowNull: true,
+    },
+});
+db.Article.belongsTo(db.User, {
+    foreignKey: {
+        name: 'userid',
+        allowNull: false,
+    },
+});
+
 export default db;

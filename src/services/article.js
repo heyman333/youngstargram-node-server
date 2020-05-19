@@ -19,6 +19,15 @@ export default class ArticleService {
             where: {
                 id,
             },
+            include: [
+                {
+                    model: db.User,
+                    attributes: ['id', 'email', 'nickname', 'profileurl'],
+                },
+                {
+                    model: db.ArticleImage,
+                },
+            ],
         });
 
         return result.dataValues;
