@@ -14,9 +14,15 @@ export default (app) => {
     const articleInstance = new ArticleService();
     const authInstance = new AuthService();
 
-    route.get('/:id', middlewares.isAuth(false), async (req, res) => {
+    route.get('/item/:id', middlewares.isAuth(false), async (req, res) => {
         const article = await articleInstance.Read(req.params.id);
         return res.json(article);
+    });
+
+    route.get('/articles', middlewares.isAuth(false), async (req, res) => {
+        const { page } = req.query;
+        const articles = await articleInstance.ReadAllByPage(page);
+        return res.json(articles);
     });
 
     route.post(

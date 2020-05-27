@@ -82,12 +82,7 @@ export default (app) => {
     route.get('/user/:id', async (req, res, next) => {
         try {
             const result = await authInstance.GetUser(req.params.id);
-
-            if (result) {
-                return res.json(result);
-            }
-
-            throw new Error();
+            return res.json(result);
         } catch (e) {
             LoggerInstance.error('🔥 error: %o', e);
             return next(e);

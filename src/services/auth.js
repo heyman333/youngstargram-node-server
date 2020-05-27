@@ -80,17 +80,13 @@ export default class AuthService {
     }
 
     async GetUser(userId) {
-        try {
-            const result = await this.userModel.findOne({
-                where: {
-                    id: userId,
-                },
-            });
-            return result.dataValues;
-        } catch (e) {
-            console.log(e);
-            return null;
-        }
+        const result = await this.userModel.findOne({
+            where: {
+                id: userId,
+            },
+            attributes: { exclude: ['salt', 'password'] },
+        });
+        return result.dataValues;
     }
 
     async Getme(userEmail) {
@@ -98,31 +94,28 @@ export default class AuthService {
             where: {
                 email: userEmail,
             },
+            attributes: { exclude: ['salt', 'password'] },
         });
 
-        const newUser = { ...user.dataValues };
-        delete newUser.password;
-        delete newUser.salt;
+        // delete user.password;
+        // delete user.salt;
 
-        return newUser;
+        return user.dataValues;
     }
 
     async UpdateUser(userInfo) {
-        const user = await this.userModel.findOne({
+        await this.userModel.update(userInfo, {
+            where: { id: userInfo.id },
+        });
+
+        const newUser = await this.userModel.findOne({
             where: {
                 id: userInfo.id,
             },
-        });
-        const newUser = { ...user.dataValues, ...userInfo };
-
-        await this.userModel.update(userInfo, {
-            where: { id: newUser.id },
+            attributes: { exclude: ['salt', 'password'] },
         });
 
-        delete newUser.salt;
-        delete newUser.password;
-
-        return newUser;
+        return newUser.dataValues;
     }
 
     async Withdraw(email) {

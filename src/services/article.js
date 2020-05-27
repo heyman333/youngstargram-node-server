@@ -19,10 +19,13 @@ export default class ArticleService {
             where: {
                 id,
             },
+            attributes: { exclude: ['userid'] },
             include: [
                 {
                     model: db.User,
-                    attributes: ['id', 'email', 'nickname', 'profileurl'],
+                    attributes: {
+                        exclude: ['password', 'salt'],
+                    },
                 },
                 {
                     model: db.ArticleImage,
@@ -33,13 +36,34 @@ export default class ArticleService {
         return result.dataValues;
     }
 
+    async ReadAllByPage(page) {
+        const result = await this.articleModel.findAndCountAll({
+            offset: 10 * page,
+            limit: 10,
+            attributes: { exclude: 'userid' },
+            include: [
+                {
+                    model: db.User,
+                    attributes: {
+                        exclude: ['password', 'salt'],
+                    },
+                },
+            ],
+        });
+
+        // TODO: isEnd 구현
+
+        const isEnd = result.count <= 10 * page + 10;
+        const articles = { items: result.rows, isEnd };
+        delete articles.count;
+
+        return articles;
+    }
+
     async SaveArticleImages(articleid, files) {
         const promises = files.map((file) =>
             this.articleImageModel.create({
-                imageurl: file.location.replace(
-                    'https://youngstargram-test.s3.ap-northeast-2.amazonaws.com/images',
-                    ''
-                ),
+                imageurl: file.location,
                 articleid,
             })
         );

@@ -68,5 +68,6 @@ export default {
     aws: {
         AccessKeyId: process.env.AWSAccessKeyId,
         SecretKey: process.env.AWSSecretKey,
+        ImageStoragePrefix: process.env.AWSS3,
     },
 };
