@@ -137,3 +137,7 @@ tmp/
 temp/
 
 # End of https://www.gitignore.io/api/node,macos
+
+# migration config
+config.migration.json
+migrations/

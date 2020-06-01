@@ -1,10 +1,12 @@
 import { Router } from 'express';
 import { Container } from 'typedi';
 import { celebrate, Joi } from 'celebrate';
+import { profileImageupload } from "../../upload"
 
 import AuthService from '../../services/auth';
 import middlewares from '../middlewares';
 import LoggerInstance from '../../loaders/logger';
+
 
 const route = Router();
 
@@ -92,6 +94,7 @@ export default (app) => {
     route.post(
         '/update',
         middlewares.isAuth(false),
+        profileImageupload.single('profileurl'),
         celebrate({
             body: Joi.object({
                 id: Joi.number().required(),
@@ -100,8 +103,12 @@ export default (app) => {
             }),
         }),
         async (req, res, next) => {
+            const { location } = req.file
             try {
-                const result = await authInstance.UpdateUser(req.body);
+                const result = await authInstance.UpdateUser({
+                    ...req.body,
+                    profileurl: location,
+                });
                 return res.json(result);
             } catch (e) {
                 LoggerInstance.error('🔥 error: %o', e);

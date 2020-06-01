@@ -51,8 +51,6 @@ export default class ArticleService {
             ],
         });
 
-        // TODO: isEnd 구현
-
         const isEnd = result.count <= 10 * page + 10;
         const articles = { items: result.rows, isEnd };
         delete articles.count;

@@ -18,7 +18,7 @@ const User = (sequelize, DataTypes) => {
                 unique: true,
             },
             nickname: { type: DataTypes.STRING(10), allowNull: true },
-            profileurl: { type: DataTypes.STRING(30), allowNull: true },
+            profileurl: { type: DataTypes.STRING(200), allowNull: true },
         },
         { timestamps: true }
     );
